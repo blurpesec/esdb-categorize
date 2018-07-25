@@ -1,7 +1,6 @@
 const stringtokens = require('./../tokens/tokens.json')
 const request = require('request')
 const json = require('json')
-const url = require('url')
 
 /*
 * tests tokens.json strings against code pulled from inputdomain
@@ -9,7 +8,7 @@ const url = require('url')
 async function containsfiletest (inputdomain) {
     var output = {}
     var detected = false
-    
+
     inputdomain = "http://" + inputdomain
 
     /* Lookup inputdomain */

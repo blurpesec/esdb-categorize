@@ -23,7 +23,6 @@
         "idna-normalize": "^1.0.0",
         "json": "^9.0.6",
         "punycode": "^2.1.1",
-        "request": "^2.87.0",
-        "url": "^0.11.0"
+        "request": "^2.87.0"
     }
 }
