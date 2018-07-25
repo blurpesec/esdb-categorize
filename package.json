@@ -1,0 +1,24 @@
+{
+  "name": "esdb-categorize",
+  "version": "0.0.1",
+  "description": "A package to categorize an input domain for usage in MyCrypto's EtherScamDB project.",
+  "main": "test.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "ethereum",
+    "security",
+    "phishing",
+    "homograph attack"
+  ],
+  "author": "blurpesec",
+  "license": "MIT",
+  "dependencies": {
+    "fast-levenshtein": "^2.0.6",
+    "idna-normalize": "^1.0.0",
+    "json": "^9.0.6",
+    "punycode": "^2.1.1",
+    "request": "^2.87.0"
+  }
+}
