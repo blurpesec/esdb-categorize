@@ -3,36 +3,34 @@ const config = require('./../config.js');
 const leven = require('fast-levenshtein')
 
 /*
-* Check config.json and compare data there
+* Check config.json and compare inputdomain to data in tokens.json based on levenshtein distance
 */
 async function levenshteintest (inputdomain) {
     var output = {}
-    var configdefaultlength = config.levenshteindefaultlength
+    var configdefaultstep = config.levenshteindefaultstep
     var configfirststep = config.levenshteinfirststep[0]
     var configfirstlength = config.levenshteinfirststep[1]
     var configsecondstep = config.levenshteinsecondstep[0]
     var configsecondlength = config.levenshteinsecondstep[1]
     var configthirdstep = config.levenshteinthirdstep[0]
     var configthirdlength = config.levenshteinthirdstep[1]
-    var lengthtouse
+    var lengthtouse = 5
 
     /*
     * Uses data from config.js and length of inputdomain to determine what length to use.
     */
-    if (inputdomain.length-1 <= configdefaultlength) {
+    if (inputdomain.length-1 <= configdefaultstep) {
         lengthtouse = configfirstlength
     }
-    if (inputdomain.length-1 > configfirststep && inputdomain.length <= configsecondstep) {
+    if (inputdomain.length-1 > configfirststep && inputdomain.length-1 <= configsecondstep) {
         lengthtouse = configsecondlength-1
     }
-    if (inputdomain.length-1 > configsecondstep && inputdomain.length <= configthirdstep) {
+    if (inputdomain.length-1 > configsecondstep && inputdomain.length-1 <= configthirdstep) {
         lengthtouse = configsecondlength
     }
     if (inputdomain.length-1 > configthirdstep) {
         lengthtouse = configthirdlength
     }
-
-    // Length to use has been determined based off of length of inputdomain.
 
     var calculatedlength = 0
     var detecteddomain
@@ -54,6 +52,10 @@ async function levenshteintest (inputdomain) {
         }
     })
 
+    /*
+    * If the smallest levenshtein edit distance is less than the calculated length to use (),
+    * then mark the ouput json as result = true, and edit in the category and detecteddomain 
+    */
     if (smallestlevenlength <= lengthtouse) {
         output.result = true
         output.category = "Phishing"

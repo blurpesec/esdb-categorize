@@ -4,11 +4,11 @@
     "description": "A package to categorize an input domain for usage in EtherScamDB",
     "main": "test.js",
     "scripts": {
-        "test": "node test.js"
+        "test": "node --trace-warnings test.js"
     },
-    "repository" : {
-        "type" : "git",
-        "url" : "https://github.com/hahnmichaelf/esdb-categorizer.git"
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hahnmichaelf/esdb-categorizer.git"
     },
     "keywords": [
         "ethereum",
@@ -23,6 +23,7 @@
         "idna-normalize": "^1.0.0",
         "json": "^9.0.6",
         "punycode": "^2.1.1",
-        "request": "^2.87.0"
+        "request": "^2.87.0",
+        "url": "^0.11.0"
     }
 }

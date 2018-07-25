@@ -1,5 +1,4 @@
 const falsepositivetokens = require('./../tokens/tokens.json')
-const config = require('./../config.js');
 
 /*
 * tests for false positives by comparing to tokens.json's url fields

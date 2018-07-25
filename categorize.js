@@ -4,7 +4,7 @@ const punycode = require('punycode')
 const falsepositivetest = require('./tests/falsepositivetest.js')
 const levenshteintest = require('./tests/levenshteintest.js')
 const stringtokentest = require('./tests/stringtokentest.js')
-const containsfiletest = require('./tests/containsfiletest.js')
+const containsstringtest = require('./tests/containsstringtest.js')
 
 module.exports = class Categorize {
     test (inputdomain) {
@@ -48,8 +48,9 @@ module.exports = class Categorize {
             // starts testing
             var levenshteintestresults = await levenshteintest(normalizedinput)
             var stringtokentestresults = await stringtokentest(normalizedinput)
-            var containsfiletestresults = await containsfiletest(inputdomain)
+            var containsstringtestresults = await containsstringtest(editeddomain)
 
+            // Uses results of tests
             if (levenshteintestresults.result) {
                 if (returnjson.categorized === false) {
                     returnjson.categorized = true
@@ -66,13 +67,13 @@ module.exports = class Categorize {
                 returnjson.subcategory = stringtokentestresults.subcategory
                 returnjson.detectedbytest.push('stringtokentest')
             }
-            if (containsfiletestresults.result) {
+            if (containsstringtestresults.result) {
                 if (returnjson.categorized === false) {
                     returnjson.categorized = true
                 }
-                returnjson.category = containsfiletestresults.category
-                returnjson.subcategory = containsfiletestresults.subcategory
-                returnjson.detectedbytest.push('containsfiletest')
+                returnjson.category = containsstringtestresults.category
+                returnjson.subcategory = containsstringtestresults.subcategory
+                returnjson.detectedbytest.push('containsstringtest')
             }
             resolve(returnjson)
         })
