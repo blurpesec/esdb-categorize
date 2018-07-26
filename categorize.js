@@ -5,6 +5,7 @@ const falsepositivetest = require('./tests/falsepositivetest.js')
 const levenshteintest = require('./tests/levenshteintest.js')
 const stringtokentest = require('./tests/stringtokentest.js')
 const containsstringtest = require('./tests/containsstringtest.js')
+const config = require('./config.js')
 
 module.exports = class Categorize {
     test (inputdomain) {
@@ -14,7 +15,8 @@ module.exports = class Categorize {
             returnjson.categorized = false
 
             /* remove unneeded shit */
-            var editeddomain = inputdomain.replace('http://','').replace('https://','').replace('[.]','.').replace('www.','').split(/[/?#]/)[0].toLowerCase();
+            var editeddomain = inputdomain.replace('http://','').replace('https://','').replace('[.]','.').replace('www.','').toLowerCase();
+            var editeddowndomain = editeddomain.split(/[/?#]/)[0]
             var processdomain = punycode.toUnicode(editeddomain);
 
             /* normalize process */
@@ -33,48 +35,65 @@ module.exports = class Categorize {
 
             returnjson.detectedbytest = []
 
+            if (!config.runfalsepositivetest && !config.runlevenshteintest && !config.runstringtokentest && !config.runcontainsstringtest) {
+              console.log("Didnt select any tests to run. Edit the config.js file to do so.")
+            }
+
             // checks to see if false-positive
-            var falsepositivetestresults = await falsepositivetest(editeddomain)
-            if (falsepositivetestresults.result) {
-                if (returnjson.categorized === false ) {
-                    returnjson.categorized = true
+            if (config.runfalsepositivetest) {
+                var falsepositivetestresults = await falsepositivetest(editeddomain)
+                if (falsepositivetestresults.result) {
+                    if (returnjson.categorized === false ) {
+                        returnjson.categorized = true
+                    }
+                    returnjson.category = falsepositivetestresults.category
+                    returnjson.subcategory = falsepositivetestresults.subcategory
+                    returnjson.detectedbytest.push('falsepositivetest')
+                    resolve(returnjson)
                 }
-                returnjson.category = falsepositivetestresults.category
-                returnjson.subcategory = falsepositivetestresults.subcategory
-                returnjson.detectedbytest.push('falsepositivetest')
-                resolve(returnjson)
             }
 
             // starts testing
-            var levenshteintestresults = await levenshteintest(normalizedinput)
-            var stringtokentestresults = await stringtokentest(normalizedinput)
-            var containsstringtestresults = await containsstringtest(editeddomain)
+            if (config.runlevenshteintest) {
+                var levenshteintestresults = await levenshteintest(normalizedinput)
+                if (levenshteintestresults.result) {
+                    if (returnjson.categorized === false) {
+                        returnjson.categorized = true
+                    }
+                    returnjson.category = levenshteintestresults.category
+                    returnjson.subcategory = levenshteintestresults.subcategory
+                    returnjson.detectedbytest.push('levenshteintest')
+                }
+            }
+            if (config.runstringtokentest) {
+                var stringtokentestresults = await stringtokentest(normalizedinput)
+                if (stringtokentestresults.result) {
+                    if (returnjson.categorized === false) {
+                        returnjson.categorized = true
+                    }
+                    returnjson.category = stringtokentestresults.category
+                    returnjson.subcategory = stringtokentestresults.subcategory
+                    returnjson.detectedbytest.push('stringtokentest')
+                }
+            }
+            if (config.runcontainsstringtest) {
+                var containsstringtestresults = await containsstringtest(editeddomain)
+                if (containsstringtestresults.result) {
+                    if (returnjson.categorized === false) {
+                        returnjson.categorized = true
+                    }
+                    returnjson.status = containsstringtestresults.status
+                    returnjson.category = containsstringtestresults.category
+                    returnjson.subcategory = containsstringtestresults.subcategory
+                    returnjson.detectedbytest.push('containsstringtest')
+                }
+                if (!containsstringtestresults.result) {
+                    if (containsstringtestresults.status) {
+                        returnjson.status = containsstringtestresults.status
+                    }
+                }
+            }
 
-            // Uses results of tests
-            if (levenshteintestresults.result) {
-                if (returnjson.categorized === false) {
-                    returnjson.categorized = true
-                }
-                returnjson.category = levenshteintestresults.category
-                returnjson.subcategory = levenshteintestresults.subcategory
-                returnjson.detectedbytest.push('levenshteintest')
-            }
-            if (stringtokentestresults.result) {
-                if (returnjson.categorized === false) {
-                    returnjson.categorized = true
-                }
-                returnjson.category = stringtokentestresults.category
-                returnjson.subcategory = stringtokentestresults.subcategory
-                returnjson.detectedbytest.push('stringtokentest')
-            }
-            if (containsstringtestresults.result) {
-                if (returnjson.categorized === false) {
-                    returnjson.categorized = true
-                }
-                returnjson.category = containsstringtestresults.category
-                returnjson.subcategory = containsstringtestresults.subcategory
-                returnjson.detectedbytest.push('containsstringtest')
-            }
             resolve(returnjson)
         })
     }

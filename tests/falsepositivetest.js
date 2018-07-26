@@ -7,6 +7,11 @@ async function falsepositivetest (inputdomain) {
     var output = {}
     var detected = false
     falsepositivetokens.forEach(function(token) {
+
+        /*
+        * If token has a field for url, cycle through each url to determine
+        * if it is the same as inputdomain. If it is, it's a Verified Domain
+        */
         if (token.url) {
             if (token.url == inputdomain) {
                 output.result = true
