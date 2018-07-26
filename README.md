@@ -19,11 +19,13 @@ npm test
 ###### Example test.js implementation:
 
 ```
-const categorizedomain = require('./categorize.js');
+const test = require('esdb-categorize');
 const json = require('json');
 
-categorize = new categorizedomain()
-categorize.test("https://www.mycryptor.com/").then(function(output) {
+const input = {"domain": "https://www.mycryptor.com/"}
+
+categorize = new test(input)
+categorize.test().then(function(output) {
     console.log(JSON.stringify(output, null, 2))
 })
   ```
@@ -37,6 +39,7 @@ For verified domains:
 {
   "input": "https://www.mycrypto.com/",
   "categorized": true,
+  "name": "mycrypto.com",
   "idnhomograph": false,
   "detectedbytest": [
     "falsepositivetest"
@@ -51,6 +54,7 @@ For categorized domains:
 {
   "input": "https://www.verify.getbigeth.com/",
   "categorized": true,
+  "name": "verify.getbigeth.com",
   "idnhomograph": false,
   "detectedbytest": [
     "stringtokentest",
@@ -65,6 +69,7 @@ For uncategorized domains:
 ```
 {
   "input": "https://www.mqsdadasroperas.com/",
+  "name": "mqsdadasroperas.com",
   "categorized": false,
   "idnhomograph": false,
   "detectedbytest": []

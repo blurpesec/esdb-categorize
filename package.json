@@ -3,9 +3,6 @@
     "version": "0.0.4",
     "description": "A package to categorize an input domain for usage in EtherScamDB",
     "main": "categorize.js",
-    "scripts": {
-        "test": "node --trace-warnings test.js"
-    },
     "repository": {
         "type": "git",
         "url": "https://github.com/hahnmichaelf/esdb-categorizer.git"

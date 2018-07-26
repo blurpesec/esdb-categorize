@@ -7,10 +7,17 @@ const stringtokentest = require('./tests/stringtokentest.js')
 const containsstringtest = require('./tests/containsstringtest.js')
 const config = require('./config.js')
 
-class Categorize {
-    test (inputdomain) {
+class categorize {
+    test (inputdata) {
         return new Promise(async (resolve, reject) => {
+            var inputdomain = inputdata.domain
             var returnjson = {}
+            if (inputdata.description) {
+                returnjson.description = inputdata.description
+            }
+            if (inputdata.addresses) {
+                returnjson.addresses = inputdata.addresses
+            }
             returnjson.input = inputdomain
             returnjson.categorized = false
 
@@ -22,6 +29,7 @@ class Categorize {
             /* normalize process */
             var domainnormalize = new idnanormalizer()
             var normalizedinput = domainnormalize.normalize(processdomain)
+            returnjson.name = editeddowndomain
 
             /* detect if idn homograph attack */
             if (processdomain != editeddomain) {
@@ -99,4 +107,4 @@ class Categorize {
     }
 }
 
-module.exports = Categorize
+module.exports = categorize
