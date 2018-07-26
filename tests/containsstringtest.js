@@ -13,24 +13,30 @@ async function containsfiletest (inputdomain) {
 
     /* Lookup inputdomain */
     var res = await lookup (inputdomain)
-    if ( res.response.statusCode === 301 ) {
 
+    /* Check if complete for http:// */
+    if (res.response === undefined || res.response === '' || res.response.statusCode === 301 ) {
         res = await lookup(inputdomain.replace("http://","https://"))
-    }
-
-    /* Check if request failed */
-    if (res.response === undefined || res.response === '' || ([301, 302].includes(res.response.statusCode))) {
         output.result = false
-        return output
+        /* Check if request failed for both http:// and https:// */
+        if (res.response === undefined || res.response === '' || ([301, 302].includes(res.response.statusCode))) {
+            output.result = false
+            return output
+        }
     }
 
     /* If request was successful */
     if (res.response.statusCode == 200) {
-        /* search for each filename/string-token in tokens.json */
+        /* search for each string in tokens.json */
         stringtokens.forEach(function(token) {
+            /*
+            * If token has a field for strings, cycle through each string to
+            * determine if it is detected in the request return body. If detected,
+            * return result = true
+            */
             if (token.strings) {
-                token.strings.forEach(function(filename) {
-                    if (res.body.indexOf(filename) > -1) {
+                token.strings.forEach(function(string) {
+                    if (res.body.indexOf(string) > -1) {
                         output.result = true
                         output.category = token.category
                         output.subcategory = token.subcategory
