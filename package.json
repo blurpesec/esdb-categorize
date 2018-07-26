@@ -1,8 +1,8 @@
 {
     "name": "esdb-categorize",
-    "version": "0.0.2",
+    "version": "0.0.4",
     "description": "A package to categorize an input domain for usage in EtherScamDB",
-    "main": "test.js",
+    "main": "categorize.js",
     "scripts": {
         "test": "node --trace-warnings test.js"
     },

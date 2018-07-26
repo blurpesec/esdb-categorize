@@ -7,7 +7,7 @@ const stringtokentest = require('./tests/stringtokentest.js')
 const containsstringtest = require('./tests/containsstringtest.js')
 const config = require('./config.js')
 
-module.exports = class Categorize {
+class Categorize {
     test (inputdomain) {
         return new Promise(async (resolve, reject) => {
             var returnjson = {}
@@ -98,3 +98,5 @@ module.exports = class Categorize {
         })
     }
 }
+
+module.exports = Categorize
